@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"os"
+
+	"github.com/rwx-yxu/blackjack"
+)
 
 func main() {
-	fmt.Println("vim-go")
+	blackjack.Run(os.Stdin)
 }
