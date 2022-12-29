@@ -12,31 +12,100 @@ type Deck struct {
 
 func NewDeck() *Deck {
 	d := new(Deck)
-	m := map[CardName]int{
-		Ace:   0,
-		Two:   0,
-		Three: 0,
-		Four:  0,
-		Five:  0,
-		Six:   0,
-		Seven: 0,
-		Eight: 0,
-		Nine:  0,
-		Ten:   0,
-		Jack:  0,
-		Queen: 0,
-		King:  0,
+
+	deckTracker := map[CardName]map[CardSuit]bool{
+		Ace: {
+			Diamond: false,
+			Club:    false,
+			Heart:   false,
+			Spade:   false,
+		},
+		Two: {
+			Diamond: false,
+			Club:    false,
+			Heart:   false,
+			Spade:   false,
+		},
+		Three: {
+			Diamond: false,
+			Club:    false,
+			Heart:   false,
+			Spade:   false,
+		},
+		Four: {
+			Diamond: false,
+			Club:    false,
+			Heart:   false,
+			Spade:   false,
+		},
+		Five: {
+			Diamond: false,
+			Club:    false,
+			Heart:   false,
+			Spade:   false,
+		},
+		Six: {
+			Diamond: false,
+			Club:    false,
+			Heart:   false,
+			Spade:   false,
+		},
+		Seven: {
+			Diamond: false,
+			Club:    false,
+			Heart:   false,
+			Spade:   false,
+		},
+		Eight: {
+			Diamond: false,
+			Club:    false,
+			Heart:   false,
+			Spade:   false,
+		},
+		Nine: {
+			Diamond: false,
+			Club:    false,
+			Heart:   false,
+			Spade:   false,
+		},
+		Ten: {
+			Diamond: false,
+			Heart:   false,
+			Club:    false,
+			Spade:   false,
+		},
+		Jack: {
+			Diamond: false,
+			Spade:   false,
+			Club:    false,
+			Heart:   false,
+		},
+		Queen: {
+			Diamond: false,
+			Club:    false,
+			Spade:   false,
+			Heart:   false,
+		},
+		King: {
+			Diamond: false,
+			Club:    false,
+			Heart:   false,
+			Spade:   false,
+		},
 	}
 
 	for len(d.Cards) < 52 {
-		//Generate a random index of Card Name to be added to deck
+		//Generate a random index of card name and card suit to be added to deck
 		rand.Seed(time.Now().UnixNano())
 		randIndx := rand.Intn(len(CardNames))
 		cardName := CardNames[randIndx]
 
-		val, _ := m[cardName]
+		randIndx = rand.Intn(len(CardSuits))
+		cardSuit := CardSuits[randIndx]
 
-		if val == 4 {
+		val, _ := deckTracker[cardName][cardSuit]
+
+		if val {
 			continue
 		}
 
@@ -52,9 +121,10 @@ func NewDeck() *Deck {
 		c := Card{
 			Value: cardVal,
 			Name:  cardName,
+			Suit:  cardSuit,
 		}
 
-		m[cardName] += 1
+		deckTracker[cardName][cardSuit] = true
 		d.AddCard(c)
 	}
 	return d
@@ -62,4 +132,16 @@ func NewDeck() *Deck {
 
 func (d *Deck) AddCard(c Card) {
 	d.Cards = append(d.Cards, c)
+}
+
+func (d *Deck) Draw() Card {
+	//Check that deck size is empty. If empty, generate a new deck.
+	if len(d.Cards) == 0 {
+		d = NewDeck()
+	}
+
+	topCard := d.Cards[len(d.Cards)-1]
+	//Remove last element from cards list
+	d.Cards = d.Cards[:len(d.Cards)-1]
+	return topCard
 }

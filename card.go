@@ -8,24 +8,33 @@ import (
 type Card struct {
 	Value int
 	Name  CardName
+	Suit  CardSuit
 }
 
 type CardName string
+type CardSuit string
+
+const (
+	Diamond CardSuit = "♦️"
+	Club    CardSuit = "♣️"
+	Heart   CardSuit = "♥️"
+	Spade   CardSuit = "♠️"
+)
 
 const (
 	Ace   CardName = "Ace"
-	Two   CardName = "Two"
-	Three CardName = "Three"
-	Four  CardName = "Four"
-	Five  CardName = "Five"
-	Six   CardName = "Six"
-	Seven CardName = "Seven"
-	Eight CardName = "Eight"
-	Nine  CardName = "Nine"
-	Ten   CardName = "Ten"
-	Jack  CardName = "Jack"
-	Queen CardName = "Queen"
-	King  CardName = "King"
+	Two   CardName = "2"
+	Three CardName = "3"
+	Four  CardName = "4"
+	Five  CardName = "5"
+	Six   CardName = "6"
+	Seven CardName = "7"
+	Eight CardName = "8"
+	Nine  CardName = "9"
+	Ten   CardName = "10"
+	Jack  CardName = "Jack "
+	Queen CardName = "Queen "
+	King  CardName = "King "
 )
 
 var CardNames = []CardName{
@@ -42,6 +51,13 @@ var CardNames = []CardName{
 	Jack,
 	Queen,
 	King,
+}
+
+var CardSuits = []CardSuit{
+	Diamond,
+	Spade,
+	Club,
+	Heart,
 }
 
 func CardValue(cn CardName) (val int, err error) {
