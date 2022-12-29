@@ -33,7 +33,7 @@ func Run(r io.Reader) {
 		dealer.score += card.Value
 		dealer.hand = append(dealer.hand, card)
 	}
-
+	EvaluateBlackJack()
 	fmt.Printf("Dealer cards: ?, %v%v\n", dealer.hand[1].Name, dealer.hand[1].Suit)
 
 	fmt.Printf("Player cards: %v%v, %v%v\n", player.hand[0].Name, player.hand[0].Suit, player.hand[1].Name, player.hand[1].Suit)
@@ -41,6 +41,42 @@ func Run(r io.Reader) {
 	fmt.Printf("Score: %v\n", player.score)
 	PlayerPhase(r)
 	DealerPhase()
+}
+
+func EvaluateBlackJack() {
+	hasAce := false
+	hasRoyal := false
+
+	for i := 0; i < len(player.hand); i++ {
+		if player.hand[i].Name == Ace && !hasAce {
+			hasAce = true
+		}
+
+		if player.hand[i].Name == King || player.hand[i].Name == Queen || player.hand[i].Name == King {
+			hasRoyal = true
+		}
+	}
+
+	if hasAce && hasRoyal {
+		player.score = 21
+	}
+
+	hasAce = false
+	hasRoyal = false
+
+	for i := 0; i < len(dealer.hand); i++ {
+		if dealer.hand[i].Name == Ace && !hasAce {
+			hasAce = true
+		}
+
+		if dealer.hand[i].Name == King || dealer.hand[i].Name == Queen || dealer.hand[i].Name == King {
+			hasRoyal = true
+		}
+	}
+
+	if hasAce && hasRoyal {
+		dealer.score = 21
+	}
 }
 
 func DealerPhase() {
@@ -70,6 +106,7 @@ func DealerPhase() {
 				break
 			}
 		} else if dealer.score > player.score {
+			fmt.Printf("Dealer score: %v\n", dealer.score)
 			fmt.Println("Dealer wins!")
 			break
 		} else {
@@ -117,5 +154,6 @@ func PlayerPhase(r io.Reader) {
 func GameOver() {
 	fmt.Println("Game Over")
 	fmt.Printf("Dealer hand was: %v%v, %v%v\n", dealer.hand[0].Name, dealer.hand[0].Suit, dealer.hand[1].Name, dealer.hand[1].Suit)
+	fmt.Printf("Dealer score: %v\n", dealer.score)
 	os.Exit(0)
 }
