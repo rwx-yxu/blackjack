@@ -63,7 +63,7 @@ var CardSuits = []CardSuit{
 func CardValue(cn CardName) (val int, err error) {
 	switch cn {
 	case Ace:
-		return 1, nil
+		return 10, nil
 	case Two:
 		return 2, nil
 	case Three:
