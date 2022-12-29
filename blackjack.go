@@ -45,36 +45,36 @@ func Run(r io.Reader) {
 
 func EvaluateBlackJack() {
 	hasAce := false
-	hasRoyal := false
+	hasTenValue := false
 
 	for i := 0; i < len(player.hand); i++ {
 		if player.hand[i].Name == Ace && !hasAce {
 			hasAce = true
 		}
 
-		if player.hand[i].Name == King || player.hand[i].Name == Queen || player.hand[i].Name == King {
-			hasRoyal = true
+		if player.hand[i].Name == King || player.hand[i].Name == Queen || player.hand[i].Name == King || player.hand[i].Name == Ten {
+			hasTenValue = true
 		}
 	}
 
-	if hasAce && hasRoyal {
+	if hasAce && hasTenValue {
 		player.score = 21
 	}
 
 	hasAce = false
-	hasRoyal = false
+	hasTenValue = false
 
 	for i := 0; i < len(dealer.hand); i++ {
 		if dealer.hand[i].Name == Ace && !hasAce {
 			hasAce = true
 		}
 
-		if dealer.hand[i].Name == King || dealer.hand[i].Name == Queen || dealer.hand[i].Name == King {
-			hasRoyal = true
+		if dealer.hand[i].Name == King || dealer.hand[i].Name == Queen || dealer.hand[i].Name == King || dealer.hand[i].Name == Ten {
+			hasTenValue = true
 		}
 	}
 
-	if hasAce && hasRoyal {
+	if hasAce && hasTenValue {
 		dealer.score = 21
 	}
 }
