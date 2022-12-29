@@ -40,7 +40,44 @@ func Run(r io.Reader) {
 
 	fmt.Printf("Score: %v\n", player.score)
 	PlayerPhase(r)
+	DealerPhase()
+}
 
+func DealerPhase() {
+	//Reveal the dealers hand
+	fmt.Printf("Dealer hand: %v%v, %v%v\n", dealer.hand[0].Name, dealer.hand[0].Suit, dealer.hand[1].Name, dealer.hand[1].Suit)
+
+	for {
+		if player.score > dealer.score {
+			card := deck.Draw()
+			dealer.hand = append(dealer.hand, card)
+			prescore := dealer.score + card.Value
+
+			for i := 0; i < len(dealer.hand); i++ {
+				if prescore > 21 && dealer.hand[i].Name == Ace && dealer.hand[i].Value == 10 {
+					dealer.hand[i].Value = 1
+					prescore -= 9
+				}
+			}
+
+			dealer.score = prescore
+			fmt.Printf("Card drawn: %v%v\n", card.Name, card.Suit)
+			fmt.Printf("Dealer Score: %v\n", dealer.score)
+
+			if dealer.score > 21 {
+				fmt.Println("Dealer bust")
+				fmt.Println("Player wins!")
+				break
+			}
+		} else if dealer.score > player.score {
+			fmt.Println("Dealer wins!")
+			break
+		} else {
+			fmt.Println("Draw. Game tied.")
+			break
+		}
+	}
+	os.Exit(0)
 }
 
 func PlayerPhase(r io.Reader) {
