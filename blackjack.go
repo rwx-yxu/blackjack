@@ -37,8 +37,10 @@ func Run(r io.Reader) {
 	fmt.Printf("Dealer cards: ?, %v%v\n", dealer.hand[1].Name, dealer.hand[1].Suit)
 
 	fmt.Printf("Player cards: %v%v, %v%v\n", player.hand[0].Name, player.hand[0].Suit, player.hand[1].Name, player.hand[1].Suit)
+
 	fmt.Printf("Score: %v\n", player.score)
 	PlayerPhase(r)
+
 }
 
 func PlayerPhase(r io.Reader) {
@@ -53,18 +55,22 @@ func PlayerPhase(r io.Reader) {
 		case "2":
 			card := deck.Draw()
 			player.hand = append(player.hand, card)
+			prescore := player.score + card.Value
 
-			if card.Name == Ace && (player.score+card.Value > 21) {
-				card.Value = 1
+			for i := 0; i < len(player.hand); i++ {
+				if prescore > 21 && player.hand[i].Name == Ace && player.hand[i].Value == 10 {
+					player.hand[i].Value = 1
+					prescore -= 9
+				}
 			}
 
-			player.score += card.Value
+			player.score = prescore
 
 			fmt.Printf("Card drawn: %v%v\n", card.Name, card.Suit)
+			fmt.Printf("Score: %v\n", player.score)
 			if player.score > 21 {
 				GameOver()
 			}
-			fmt.Printf("Score: %v\n", player.score)
 		default:
 			fmt.Println("Please enter a valid response of '1' or '2'")
 		}
