@@ -63,7 +63,7 @@ var Suits = []Suit{
 func Value(n Name) (val int, err error) {
 	switch n {
 	case Ace:
-		return 10, nil
+		return 11, nil
 	case Two:
 		return 2, nil
 	case Three:

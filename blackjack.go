@@ -82,28 +82,15 @@ func EndPrompt(r io.Reader) {
 }
 func DrawPhase(u User, deck *Deck) {
 
-	hasAce := false
-	hasTenValue := false
-
 	for i := 0; i < 2; i++ {
 		if len(deck.Cards) == 0 {
 			deck = NewDeck()
 		}
 		c := deck.Draw()
-		if c.Name == card.Ace && !hasAce {
-			hasAce = true
-		}
-
-		if c.Name == card.King || c.Name == card.Queen || c.Name == card.King || c.Name == card.Ten {
-			hasTenValue = true
-		}
 		u.SetScore(u.GetScore() + c.Value)
 		u.AddCard(c)
 	}
 
-	if hasAce && hasTenValue {
-		u.SetScore(21)
-	}
 }
 
 func DealerPhase() {
@@ -166,9 +153,9 @@ func Hit(u User, c card.C) {
 	prescore := u.GetScore() + c.Value
 	handCards := u.GetHand()
 	for i := 0; i < len(handCards); i++ {
-		if prescore > 21 && handCards[i].Name == card.Ace && handCards[i].Value == 10 {
+		if prescore > 21 && handCards[i].Name == card.Ace && handCards[i].Value == 11 {
 			handCards[i].Value = 1
-			prescore -= 9
+			prescore -= 10
 		}
 	}
 
