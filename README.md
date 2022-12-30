@@ -1,5 +1,6 @@
 # Blackjack
 
+[![GoDoc](https://godoc.org/github.com/rwx-yxu/blackjack?status.svg)](https://godoc.org/github.com/rwx-yxu/blackjack)
 [![License](https://img.shields.io/badge/license-Apache2-brightgreen.svg)](LICENSE)
 
 A console application which simulates a blackjack game.
