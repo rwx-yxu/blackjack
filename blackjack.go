@@ -7,6 +7,7 @@ import (
 
 	"github.com/rwx-yxu/blackjack/card"
 	"github.com/rwx-yxu/term"
+	"github.com/rwx-yxu/term/sequence"
 )
 
 type Dealer struct {
@@ -41,6 +42,8 @@ var deck = NewDeck()
 var player = &Player{}
 
 func Run(r io.Reader) {
+	sequence.OnIfTerminal(r)
+	fmt.Println(sequence.CLSEntire)
 	//Draw phase
 	DrawPhase(player, deck)
 	DrawPhase(dealer, deck)
