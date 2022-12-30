@@ -5,35 +5,36 @@ import (
 	"io"
 	"os"
 
+	"github.com/rwx-yxu/blackjack/card"
 	"github.com/rwx-yxu/term"
 )
 
 type Dealer struct {
-	hand  []Card
+	hand  []card.C
 	score int
 }
 
 type Player struct {
-	hand  []Card
+	hand  []card.C
 	score int
 }
 
 type User interface {
-	GetHand() []Card
+	GetHand() []card.C
 	GetScore() int
 	SetScore(s int)
-	AddCard(c Card)
+	AddCard(c card.C)
 }
 
-func (d *Dealer) GetHand() []Card { return d.hand }
-func (d *Dealer) GetScore() int   { return d.score }
-func (d *Dealer) SetScore(s int)  { d.score = s }
-func (d *Dealer) AddCard(c Card)  { d.hand = append(d.hand, c) }
+func (d *Dealer) GetHand() []card.C { return d.hand }
+func (d *Dealer) GetScore() int     { return d.score }
+func (d *Dealer) SetScore(s int)    { d.score = s }
+func (d *Dealer) AddCard(c card.C)  { d.hand = append(d.hand, c) }
 
-func (p *Player) GetHand() []Card { return p.hand }
-func (p *Player) GetScore() int   { return p.score }
-func (p *Player) SetScore(s int)  { p.score = s }
-func (p *Player) AddCard(c Card)  { p.hand = append(p.hand, c) }
+func (p *Player) GetHand() []card.C { return p.hand }
+func (p *Player) GetScore() int     { return p.score }
+func (p *Player) SetScore(s int)    { p.score = s }
+func (p *Player) AddCard(c card.C)  { p.hand = append(p.hand, c) }
 
 var dealer = &Dealer{}
 var deck = NewDeck()
@@ -80,16 +81,16 @@ func DrawPhase(u User, deck *Deck) {
 	hasTenValue := false
 
 	for i := 0; i < 2; i++ {
-		card := deck.Draw()
-		if card.Name == Ace && !hasAce {
+		c := deck.Draw()
+		if c.Name == card.Ace && !hasAce {
 			hasAce = true
 		}
 
-		if card.Name == King || card.Name == Queen || card.Name == King || card.Name == Ten {
+		if c.Name == card.King || c.Name == card.Queen || c.Name == card.King || c.Name == card.Ten {
 			hasTenValue = true
 		}
-		u.SetScore(u.GetScore() + card.Value)
-		u.AddCard(card)
+		u.SetScore(u.GetScore() + c.Value)
+		u.AddCard(c)
 	}
 
 	if hasAce && hasTenValue {
@@ -103,8 +104,8 @@ func DealerPhase() {
 
 	for {
 		if player.GetScore() > dealer.GetScore() {
-			card := d.Draw()
-			Hit(dealer, card)
+			c := deck.Draw()
+			Hit(dealer, c)
 			fmt.Printf("Dealer score: %v\n", dealer.GetScore())
 			if dealer.score > 21 {
 				fmt.Println("Dealer bust")
@@ -131,8 +132,8 @@ func PlayerPhase(r io.Reader) {
 			fmt.Printf("Standing with a total of: %v\n", player.GetScore())
 			return
 		case "2":
-			card := d.Draw()
-			Hit(player, card)
+			c := deck.Draw()
+			Hit(player, c)
 			fmt.Printf("Player score: %v\n", player.GetScore())
 			if player.GetScore() > 21 {
 				PlayerBust(r)
@@ -144,12 +145,12 @@ func PlayerPhase(r io.Reader) {
 	}
 }
 
-func Hit(u User, card Card) {
-	u.AddCard(card)
-	prescore := u.GetScore() + card.Value
+func Hit(u User, c card.C) {
+	u.AddCard(c)
+	prescore := u.GetScore() + c.Value
 	handCards := u.GetHand()
 	for i := 0; i < len(handCards); i++ {
-		if prescore > 21 && handCards[i].Name == Ace && handCards[i].Value == 10 {
+		if prescore > 21 && handCards[i].Name == card.Ace && handCards[i].Value == 10 {
 			handCards[i].Value = 1
 			prescore -= 9
 		}
@@ -157,7 +158,7 @@ func Hit(u User, card Card) {
 
 	u.SetScore(prescore)
 
-	fmt.Printf("Card drawn: %v%v\n", card.Name, card.Suit)
+	fmt.Printf("Card drawn: %v%v\n", c.Name, c.Suit)
 }
 
 func PlayerBust(r io.Reader) {

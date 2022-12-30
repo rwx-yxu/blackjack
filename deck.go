@@ -4,104 +4,106 @@ import (
 	"log"
 	"math/rand"
 	"time"
+
+	"github.com/rwx-yxu/blackjack/card"
 )
 
 type Deck struct {
-	Cards []Card
+	Cards []card.C
 }
 
 func NewDeck() *Deck {
 	d := new(Deck)
 
-	deckTracker := map[CardName]map[CardSuit]bool{
-		Ace: {
-			Diamond: false,
-			Club:    false,
-			Heart:   false,
-			Spade:   false,
+	deckTracker := map[card.Name]map[card.Suit]bool{
+		card.Ace: {
+			card.Diamond: false,
+			card.Club:    false,
+			card.Heart:   false,
+			card.Spade:   false,
 		},
-		Two: {
-			Diamond: false,
-			Club:    false,
-			Heart:   false,
-			Spade:   false,
+		card.Two: {
+			card.Diamond: false,
+			card.Club:    false,
+			card.Heart:   false,
+			card.Spade:   false,
 		},
-		Three: {
-			Diamond: false,
-			Club:    false,
-			Heart:   false,
-			Spade:   false,
+		card.Three: {
+			card.Diamond: false,
+			card.Club:    false,
+			card.Heart:   false,
+			card.Spade:   false,
 		},
-		Four: {
-			Diamond: false,
-			Club:    false,
-			Heart:   false,
-			Spade:   false,
+		card.Four: {
+			card.Diamond: false,
+			card.Club:    false,
+			card.Heart:   false,
+			card.Spade:   false,
 		},
-		Five: {
-			Diamond: false,
-			Club:    false,
-			Heart:   false,
-			Spade:   false,
+		card.Five: {
+			card.Diamond: false,
+			card.Club:    false,
+			card.Heart:   false,
+			card.Spade:   false,
 		},
-		Six: {
-			Diamond: false,
-			Club:    false,
-			Heart:   false,
-			Spade:   false,
+		card.Six: {
+			card.Diamond: false,
+			card.Club:    false,
+			card.Heart:   false,
+			card.Spade:   false,
 		},
-		Seven: {
-			Diamond: false,
-			Club:    false,
-			Heart:   false,
-			Spade:   false,
+		card.Seven: {
+			card.Diamond: false,
+			card.Club:    false,
+			card.Heart:   false,
+			card.Spade:   false,
 		},
-		Eight: {
-			Diamond: false,
-			Club:    false,
-			Heart:   false,
-			Spade:   false,
+		card.Eight: {
+			card.Diamond: false,
+			card.Club:    false,
+			card.Heart:   false,
+			card.Spade:   false,
 		},
-		Nine: {
-			Diamond: false,
-			Club:    false,
-			Heart:   false,
-			Spade:   false,
+		card.Nine: {
+			card.Diamond: false,
+			card.Club:    false,
+			card.Heart:   false,
+			card.Spade:   false,
 		},
-		Ten: {
-			Diamond: false,
-			Heart:   false,
-			Club:    false,
-			Spade:   false,
+		card.Ten: {
+			card.Diamond: false,
+			card.Heart:   false,
+			card.Club:    false,
+			card.Spade:   false,
 		},
-		Jack: {
-			Diamond: false,
-			Spade:   false,
-			Club:    false,
-			Heart:   false,
+		card.Jack: {
+			card.Diamond: false,
+			card.Spade:   false,
+			card.Club:    false,
+			card.Heart:   false,
 		},
-		Queen: {
-			Diamond: false,
-			Club:    false,
-			Spade:   false,
-			Heart:   false,
+		card.Queen: {
+			card.Diamond: false,
+			card.Club:    false,
+			card.Spade:   false,
+			card.Heart:   false,
 		},
-		King: {
-			Diamond: false,
-			Club:    false,
-			Heart:   false,
-			Spade:   false,
+		card.King: {
+			card.Diamond: false,
+			card.Club:    false,
+			card.Heart:   false,
+			card.Spade:   false,
 		},
 	}
 
 	for len(d.Cards) < 52 {
 		//Generate a random index of card name and card suit to be added to deck
 		rand.Seed(time.Now().UnixNano())
-		randIndx := rand.Intn(len(CardNames))
-		cardName := CardNames[randIndx]
+		randIndx := rand.Intn(len(card.Names))
+		cardName := card.Names[randIndx]
 
-		randIndx = rand.Intn(len(CardSuits))
-		cardSuit := CardSuits[randIndx]
+		randIndx = rand.Intn(len(card.Suits))
+		cardSuit := card.Suits[randIndx]
 
 		val, _ := deckTracker[cardName][cardSuit]
 
@@ -110,15 +112,15 @@ func NewDeck() *Deck {
 		}
 
 		//Initialize card and add to deck
-		cardVal, err := CardValue(cardName)
+		cardVal, err := card.Value(cardName)
 		if err != nil {
 			//Passed invalid
 			log.Print(err)
 			//Remove invalid card name from CardNames array and continue
-			CardNames = append(CardNames[:randIndx], CardNames[randIndx+1:]...)
+			card.Names = append(card.Names[:randIndx], card.Names[randIndx+1:]...)
 			continue
 		}
-		c := Card{
+		c := card.C{
 			Value: cardVal,
 			Name:  cardName,
 			Suit:  cardSuit,
@@ -130,11 +132,11 @@ func NewDeck() *Deck {
 	return d
 }
 
-func (d *Deck) AddCard(c Card) {
+func (d *Deck) AddCard(c card.C) {
 	d.Cards = append(d.Cards, c)
 }
 
-func (d *Deck) Draw() Card {
+func (d *Deck) Draw() card.C {
 	//Check that deck size is empty. If empty, generate a new deck.
 	if len(d.Cards) == 0 {
 		d = NewDeck()
