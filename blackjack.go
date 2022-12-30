@@ -51,11 +51,29 @@ func Run(r io.Reader) {
 	fmt.Printf("Score: %v\n", player.score)
 
 	PlayerPhase(r)
-
 	DealerPhase()
+	EndPrompt(r)
 
 }
 
+func EndPrompt(r io.Reader) {
+	for {
+		fmt.Println("(1) Play again or (2) End game?")
+		resp, _ := term.Prompt(r, ">")
+		switch resp {
+		case "1":
+			//Reset hand and scores. Deck should remain the same
+			dealer = &Dealer{}
+			player = &Player{}
+			Run(r)
+		case "2":
+			fmt.Println("Thank you for playing.")
+			os.Exit(0)
+		default:
+			fmt.Println("Please enter a valid response of '1' or '2'")
+		}
+	}
+}
 func DrawPhase(u User, deck *Deck) {
 
 	hasAce := false
@@ -100,7 +118,6 @@ func DealerPhase() {
 			break
 		}
 	}
-	os.Exit(0)
 }
 
 func PlayerPhase(r io.Reader) {
@@ -116,8 +133,9 @@ func PlayerPhase(r io.Reader) {
 			Hit(player, deck)
 			fmt.Printf("Player score: %v\n", player.GetScore())
 			if player.GetScore() > 21 {
-				PlayerBust()
+				PlayerBust(r)
 			}
+			break
 		default:
 			fmt.Println("Please enter a valid response of '1' or '2'")
 		}
@@ -141,9 +159,9 @@ func Hit(u User, d *Deck) {
 	fmt.Printf("Card drawn: %v%v\n", card.Name, card.Suit)
 }
 
-func PlayerBust() {
+func PlayerBust(r io.Reader) {
 	fmt.Println("Game Over")
 	fmt.Printf("Dealer hand was: %v%v, %v%v\n", dealer.hand[0].Name, dealer.hand[0].Suit, dealer.hand[1].Name, dealer.hand[1].Suit)
 	fmt.Printf("Dealer score: %v\n", dealer.GetScore())
-	os.Exit(0)
+	EndPrompt(r)
 }
