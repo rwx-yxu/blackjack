@@ -137,11 +137,6 @@ func (d *Deck) AddCard(c card.C) {
 }
 
 func (d *Deck) Draw() card.C {
-	//Check that deck size is empty. If empty, generate a new deck.
-	if len(d.Cards) == 0 {
-		d = NewDeck()
-	}
-
 	topCard := d.Cards[len(d.Cards)-1]
 	//Remove last element from cards list
 	d.Cards = d.Cards[:len(d.Cards)-1]

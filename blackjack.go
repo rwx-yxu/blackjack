@@ -47,7 +47,7 @@ func Run(r io.Reader) {
 	//Draw phase
 	DrawPhase(player, deck)
 	DrawPhase(dealer, deck)
-
+	fmt.Printf("Deck size remaining: %v\n", len(deck.Cards))
 	fmt.Printf("Dealer cards: ?, %v%v\n", dealer.hand[1].Name, dealer.hand[1].Suit)
 
 	fmt.Printf("Player cards: %v%v, %v%v\n", player.hand[0].Name, player.hand[0].Suit, player.hand[1].Name, player.hand[1].Suit)
@@ -84,6 +84,9 @@ func DrawPhase(u User, deck *Deck) {
 	hasTenValue := false
 
 	for i := 0; i < 2; i++ {
+		if len(deck.Cards) == 0 {
+			deck = NewDeck()
+		}
 		c := deck.Draw()
 		if c.Name == card.Ace && !hasAce {
 			hasAce = true
@@ -107,6 +110,9 @@ func DealerPhase() {
 
 	for {
 		if player.GetScore() > dealer.GetScore() {
+			if len(deck.Cards) == 0 {
+				deck = NewDeck()
+			}
 			c := deck.Draw()
 			Hit(dealer, c)
 			fmt.Printf("Dealer score: %v\n", dealer.GetScore())
@@ -135,6 +141,9 @@ func PlayerPhase(r io.Reader) {
 			fmt.Printf("Standing with a total of: %v\n", player.GetScore())
 			return
 		case "2":
+			if len(deck.Cards) == 0 {
+				deck = NewDeck()
+			}
 			c := deck.Draw()
 			Hit(player, c)
 			fmt.Printf("Player score: %v\n", player.GetScore())
@@ -161,7 +170,7 @@ func Hit(u User, c card.C) {
 
 	u.SetScore(prescore)
 
-	fmt.Printf("Card drawn: %v%v\n", c.Name, c.Suit)
+	fmt.Printf("Card drawn: %v%v. Deck size remaining:%v\n", c.Name, c.Suit, len(deck.Cards))
 }
 
 func PlayerBust(r io.Reader) {
