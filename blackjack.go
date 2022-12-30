@@ -115,6 +115,7 @@ func DealerPhase() {
 			}
 			c := deck.Draw()
 			Hit(dealer, c)
+			fmt.Printf("Card drawn: %v%v. Deck size remaining:%v\n", c.Name, c.Suit, len(deck.Cards))
 			fmt.Printf("Dealer score: %v\n", dealer.GetScore())
 			if dealer.score > 21 {
 				fmt.Println("Dealer bust")
@@ -146,6 +147,7 @@ func PlayerPhase(r io.Reader) {
 			}
 			c := deck.Draw()
 			Hit(player, c)
+			fmt.Printf("Card drawn: %v%v. Deck size remaining:%v\n", c.Name, c.Suit, len(deck.Cards))
 			fmt.Printf("Player score: %v\n", player.GetScore())
 			if player.GetScore() > 21 {
 				PlayerBust(r)
@@ -170,7 +172,6 @@ func Hit(u User, c card.C) {
 
 	u.SetScore(prescore)
 
-	fmt.Printf("Card drawn: %v%v. Deck size remaining:%v\n", c.Name, c.Suit, len(deck.Cards))
 }
 
 func PlayerBust(r io.Reader) {
