@@ -53,9 +53,11 @@ func Run(r io.Reader) {
 	fmt.Printf("Player cards: %v%v, %v%v\n", player.hand[0].Name, player.hand[0].Suit, player.hand[1].Name, player.hand[1].Suit)
 
 	fmt.Printf("Score: %v\n", player.score)
-
+	fmt.Println("----------------------------------")
 	PlayerPhase(r)
+	fmt.Println("----------------------------------")
 	DealerPhase()
+	fmt.Println("----------------------------------")
 	EndPrompt(r)
 
 }
@@ -175,6 +177,7 @@ func Hit(u User, c card.C) {
 }
 
 func PlayerBust(r io.Reader) {
+	fmt.Println("----------------------------------")
 	fmt.Println("Game Over")
 	fmt.Printf("Dealer hand was: %v%v, %v%v\n", dealer.hand[0].Name, dealer.hand[0].Suit, dealer.hand[1].Name, dealer.hand[1].Suit)
 	fmt.Printf("Dealer score: %v\n", dealer.GetScore())
