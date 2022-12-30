@@ -103,7 +103,8 @@ func DealerPhase() {
 
 	for {
 		if player.GetScore() > dealer.GetScore() {
-			Hit(dealer, deck)
+			card := d.Draw()
+			Hit(dealer, card)
 			fmt.Printf("Dealer score: %v\n", dealer.GetScore())
 			if dealer.score > 21 {
 				fmt.Println("Dealer bust")
@@ -130,7 +131,8 @@ func PlayerPhase(r io.Reader) {
 			fmt.Printf("Standing with a total of: %v\n", player.GetScore())
 			return
 		case "2":
-			Hit(player, deck)
+			card := d.Draw()
+			Hit(player, card)
 			fmt.Printf("Player score: %v\n", player.GetScore())
 			if player.GetScore() > 21 {
 				PlayerBust(r)
@@ -142,8 +144,7 @@ func PlayerPhase(r io.Reader) {
 	}
 }
 
-func Hit(u User, d *Deck) {
-	card := d.Draw()
+func Hit(u User, card Card) {
 	u.AddCard(card)
 	prescore := u.GetScore() + card.Value
 	handCards := u.GetHand()
