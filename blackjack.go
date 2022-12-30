@@ -54,7 +54,11 @@ func Run(r io.Reader) {
 
 	fmt.Printf("Score: %v\n", player.score)
 	fmt.Println("----------------------------------")
-	PlayerPhase(r)
+	if player.score != 21 {
+		PlayerPhase(r)
+	} else {
+		fmt.Println("Blackjack Hit! Standing with current cards.")
+	}
 	fmt.Println("----------------------------------")
 	DealerPhase()
 	fmt.Println("----------------------------------")
