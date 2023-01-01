@@ -6,40 +6,14 @@ import (
 	"os"
 
 	"github.com/rwx-yxu/blackjack/card"
+	"github.com/rwx-yxu/blackjack/user"
 	"github.com/rwx-yxu/term"
 	"github.com/rwx-yxu/term/sequence"
 )
 
-type Dealer struct {
-	hand  []card.C
-	score int
-}
-
-type Player struct {
-	hand  []card.C
-	score int
-}
-
-type User interface {
-	GetHand() []card.C
-	GetScore() int
-	SetScore(s int)
-	AddCard(c card.C)
-}
-
-func (d *Dealer) GetHand() []card.C { return d.hand }
-func (d *Dealer) GetScore() int     { return d.score }
-func (d *Dealer) SetScore(s int)    { d.score = s }
-func (d *Dealer) AddCard(c card.C)  { d.hand = append(d.hand, c) }
-
-func (p *Player) GetHand() []card.C { return p.hand }
-func (p *Player) GetScore() int     { return p.score }
-func (p *Player) SetScore(s int)    { p.score = s }
-func (p *Player) AddCard(c card.C)  { p.hand = append(p.hand, c) }
-
-var dealer = &Dealer{}
+var dealer = &user.Dealer{}
 var deck = NewDeck()
-var player = &Player{}
+var player = &user.Player{}
 
 func Run(r io.Reader) {
 	sequence.OnIfTerminal(r)
@@ -48,11 +22,11 @@ func Run(r io.Reader) {
 	DrawPhase(player, deck)
 	DrawPhase(dealer, deck)
 	fmt.Printf("Deck size remaining: %v\n", len(deck.Cards))
-	fmt.Printf("Dealer cards: ?, %v%v\n", dealer.hand[1].Name, dealer.hand[1].Suit)
+	dealer.ShowPartialHand()
 
-	fmt.Printf("Player cards: %v%v, %v%v\n", player.hand[0].Name, player.hand[0].Suit, player.hand[1].Name, player.hand[1].Suit)
+	fmt.Printf("Player cards: %v\n", user.ShowHand(player))
 
-	fmt.Printf("Score: %v\n", player.score)
+	fmt.Printf("Score: %v\n", player.GetScore())
 	fmt.Println("----------------------------------")
 	if player.score != 21 {
 		PlayerPhase(r)
@@ -170,7 +144,7 @@ func Hit(u User, c card.C) {
 func PlayerBust(r io.Reader) {
 	fmt.Println("----------------------------------")
 	fmt.Println("Game Over")
-	fmt.Printf("Dealer hand was: %v%v, %v%v\n", dealer.hand[0].Name, dealer.hand[0].Suit, dealer.hand[1].Name, dealer.hand[1].Suit)
+	fmt.Printf("Dealer hand was: %v\n", user.ShowHand(dealer))
 	fmt.Printf("Dealer score: %v\n", dealer.GetScore())
 	EndPrompt(r)
 }
