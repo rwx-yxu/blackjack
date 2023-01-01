@@ -5,6 +5,7 @@ import (
 
 	"github.com/rwx-yxu/blackjack"
 	"github.com/rwx-yxu/blackjack/card"
+	"github.com/rwx-yxu/blackjack/user"
 )
 
 func TestBlackJackScore(t *testing.T) {
@@ -46,14 +47,26 @@ func TestBlackJackScore(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		player := &blackjack.Player{}
+		player := &user.Player{}
 		t.Run(tt.name, func(t *testing.T) {
 			for _, card := range tt.cards {
 				blackjack.Hit(player, card)
 			}
-			if player.GetScore() != tt.want {
-				t.Errorf("error score: got %v, want %v", player.GetScore(), tt.want)
+			if player.Score() != tt.want {
+				t.Errorf("error score: got %v, want %v", player.Score(), tt.want)
 			}
 		})
 	}
+}
+
+func TestPlayerStartingHandCount(t *testing.T) {
+	deck := blackjack.NewDeck()
+	player := &user.Player{}
+
+	blackjack.DrawPhase(player, deck)
+
+	if len(player.Hand()) != 2 {
+		t.Errorf("starting hand should be 2: got %v, want %v", len(player.Hand()), 2)
+	}
+
 }

@@ -26,9 +26,9 @@ func Run(r io.Reader) {
 
 	fmt.Printf("Player cards: %v\n", user.ShowHand(player))
 
-	fmt.Printf("Score: %v\n", player.GetScore())
+	fmt.Printf("Score: %v\n", player.Score())
 	fmt.Println("----------------------------------")
-	if player.score != 21 {
+	if player.Score() != 21 {
 		PlayerPhase(r)
 	} else {
 		fmt.Println("Blackjack Hit! Standing with current cards.")
@@ -47,8 +47,8 @@ func EndPrompt(r io.Reader) {
 		switch resp {
 		case "1":
 			//Reset hand and scores. Deck should remain the same
-			dealer = &Dealer{}
-			player = &Player{}
+			dealer = &user.Dealer{}
+			player = &user.Player{}
 			Run(r)
 		case "2":
 			fmt.Println("Thank you for playing.")
@@ -58,14 +58,14 @@ func EndPrompt(r io.Reader) {
 		}
 	}
 }
-func DrawPhase(u User, deck *Deck) {
+func DrawPhase(u user.U, deck *Deck) {
 
 	for i := 0; i < 2; i++ {
 		if len(deck.Cards) == 0 {
 			deck = NewDeck()
 		}
 		c := deck.Draw()
-		u.SetScore(u.GetScore() + c.Value)
+		u.SetScore(u.Score() + c.Value)
 		u.AddCard(c)
 	}
 
@@ -73,23 +73,23 @@ func DrawPhase(u User, deck *Deck) {
 
 func DealerPhase() {
 	//Reveal the dealers hand
-	fmt.Printf("Dealer hand: %v%v, %v%v\n", dealer.hand[0].Name, dealer.hand[0].Suit, dealer.hand[1].Name, dealer.hand[1].Suit)
+	fmt.Printf("Dealer hand: %v\n", user.ShowHand(dealer))
 
 	for {
-		if player.GetScore() > dealer.GetScore() {
+		if player.Score() > dealer.Score() {
 			if len(deck.Cards) == 0 {
 				deck = NewDeck()
 			}
 			c := deck.Draw()
 			Hit(dealer, c)
 			fmt.Printf("Card drawn: %v%v. Deck size remaining:%v\n", c.Name, c.Suit, len(deck.Cards))
-			fmt.Printf("Dealer score: %v\n", dealer.GetScore())
-			if dealer.score > 21 {
+			fmt.Printf("Dealer score: %v\n", dealer.Score())
+			if dealer.Score() > 21 {
 				fmt.Println("Dealer bust")
 				fmt.Println("Player wins!")
 				break
 			}
-		} else if dealer.GetScore() > player.GetScore() {
+		} else if dealer.Score() > player.Score() {
 			fmt.Println("Dealer wins!")
 			break
 		} else {
@@ -106,7 +106,7 @@ func PlayerPhase(r io.Reader) {
 		resp, _ := term.Prompt(r, ">")
 		switch resp {
 		case "1":
-			fmt.Printf("Standing with a total of: %v\n", player.GetScore())
+			fmt.Printf("Standing with a total of: %v\n", player.Score())
 			return
 		case "2":
 			if len(deck.Cards) == 0 {
@@ -115,8 +115,8 @@ func PlayerPhase(r io.Reader) {
 			c := deck.Draw()
 			Hit(player, c)
 			fmt.Printf("Card drawn: %v%v. Deck size remaining:%v\n", c.Name, c.Suit, len(deck.Cards))
-			fmt.Printf("Player score: %v\n", player.GetScore())
-			if player.GetScore() > 21 {
+			fmt.Printf("Player score: %v\n", player.Score())
+			if player.Score() > 21 {
 				PlayerBust(r)
 			}
 			break
@@ -126,10 +126,10 @@ func PlayerPhase(r io.Reader) {
 	}
 }
 
-func Hit(u User, c card.C) {
+func Hit(u user.U, c card.C) {
 	u.AddCard(c)
-	prescore := u.GetScore() + c.Value
-	handCards := u.GetHand()
+	prescore := u.Score() + c.Value
+	handCards := u.Hand()
 	for i := 0; i < len(handCards); i++ {
 		if prescore > 21 && handCards[i].Name == card.Ace && handCards[i].Value == 11 {
 			handCards[i].Value = 1
@@ -145,6 +145,6 @@ func PlayerBust(r io.Reader) {
 	fmt.Println("----------------------------------")
 	fmt.Println("Game Over")
 	fmt.Printf("Dealer hand was: %v\n", user.ShowHand(dealer))
-	fmt.Printf("Dealer score: %v\n", dealer.GetScore())
+	fmt.Printf("Dealer score: %v\n", dealer.Score())
 	EndPrompt(r)
 }
