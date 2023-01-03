@@ -31,7 +31,7 @@ func TestDeckDrawCard(t *testing.T) {
 
 }
 
-func testStruct(x interface{}, t *testing.T) {
+func testStruct(x any, t *testing.T) {
 	switch x.(type) {
 	case card.C:
 		break
