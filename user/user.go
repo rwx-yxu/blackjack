@@ -7,35 +7,38 @@ import (
 )
 
 type Dealer struct {
-	hand  []card.C
-	score int
+	*U
 }
 
 type Player struct {
-	hand  []card.C
-	score int
+	*U
 }
 
-type U interface {
-	Hand() []card.C
-	Score() int
-	SetScore(s int)
-	AddCard(c card.C)
+type U struct {
+	Hand  []card.C
+	Score int
 }
 
-func (d *Dealer) Hand() []card.C   { return d.hand }
-func (d *Dealer) Score() int       { return d.score }
-func (d *Dealer) SetScore(s int)   { d.score = s }
-func (d *Dealer) AddCard(c card.C) { d.hand = append(d.hand, c) }
-func (d *Dealer) ShowPartialHand() {
-	fmt.Printf("Dealer cards: ?, %v%v\n", d.hand[1].Name, d.hand[1].Suit)
+func (d Dealer) ShowPartialHand() {
+	fmt.Printf("Dealer cards: ?, %v%v\n", d.Hand[1].Name, d.Hand[1].Suit)
 }
 
-func (p *Player) Hand() []card.C   { return p.hand }
-func (p *Player) Score() int       { return p.score }
-func (p *Player) SetScore(s int)   { p.score = s }
-func (p *Player) AddCard(c card.C) { p.hand = append(p.hand, c) }
+func (user U) ShowHand() string {
+	return fmt.Sprintf("%v%v, %v%v", user.Hand[0].Name, user.Hand[0].Suit, user.Hand[1].Name, user.Hand[1].Suit)
+}
 
-func ShowHand(u U) string {
-	return fmt.Sprintf("%v%v, %v%v", u.Hand()[0].Name, u.Hand()[0].Suit, u.Hand()[1].Name, u.Hand()[1].Suit)
+func (user *U) AddCard(c card.C) { user.Hand = append(user.Hand, c) }
+
+func (user *U) Hit(c card.C) {
+	user.AddCard(c)
+	prescore := user.Score + c.Value
+	handCards := user.Hand
+	for i := 0; i < len(handCards); i++ {
+		if prescore > 21 && handCards[i].Name == card.Ace && handCards[i].Value == 11 {
+			handCards[i].Value = 1
+			prescore -= 10
+		}
+	}
+
+	user.Score = prescore
 }
