@@ -12,18 +12,10 @@ page](https://github.com/rwx-yxu/blackjack/releases).
 Install directly from the terminal.
 
 ```
-curl -L
-https://github.com/rwx-yxu/blackjack/releases/latest/download/blackjack-linux-amd64
--o ~/.local/bin/blackjack
-curl -L
-https://github.com/rwx-yxu/blackjack/releases/latest/download/blackjack-darwin-amd64
--o ~/.local/bin/blackjack
-curl -L
-https://github.com/rwx-yxu/blackjack/releases/latest/download/blackjack-darwin-arm64
--o ~/.local/bin/blackjack
-curl -L
-https://github.com/rwx-yxu/blackjack/releases/latest/download/blackjack-windows-amd64
--o ~/.local/bin/blackjack
+curl -L https://github.com/rwx-yxu/blackjack/releases/latest/download/blackjack-linux-amd64 -o ~/.local/bin/blackjack
+curl -L https://github.com/rwx-yxu/blackjack/releases/latest/download/blackjack-darwin-amd64 -o ~/.local/bin/blackjack
+curl -L https://github.com/rwx-yxu/blackjack/releases/latest/download/blackjack-darwin-arm64 -o ~/.local/bin/blackjack
+curl -L https://github.com/rwx-yxu/blackjack/releases/latest/download/blackjack-windows-amd64 -o ~/.local/bin/blackjack
 ```
 
 Or with `go`:
